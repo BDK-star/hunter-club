@@ -1,0 +1,51 @@
+name: 功能建议
+description: 从用户问题出发提出可验证的新能力
+title: "[Feature] "
+labels: ["type: feature", "status: needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 用户问题
+      description: 哪类用户在什么场景下遇到什么问题？
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: 期望结果
+      description: 描述可验证结果，不要只指定某个技术方案。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 已考虑的替代方案
+  - type: dropdown
+    id: scope
+    attributes:
+      label: MVP范围
+      options:
+        - 已在MVP范围内
+        - 明确延期项
+        - 不确定，需要分流
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: 架构与运营影响
+      description: 说明模块、数据、权限、审核、隐私、版权、性能和运维影响。
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我已阅读产品边界和MVP路线图。
+          required: true
+        - label: 我没有附加未授权的官方作品素材。
+          required: true

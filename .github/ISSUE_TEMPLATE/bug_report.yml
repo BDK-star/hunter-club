@@ -1,0 +1,53 @@
+name: Bug报告
+description: 报告可以稳定复现的错误
+title: "[Bug] "
+labels: ["type: bug", "status: needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        安全漏洞、隐私泄露和凭据问题不要公开提交，请使用仓库Security页面的私密报告入口。
+  - type: textarea
+    id: summary
+    attributes:
+      label: 问题摘要
+      description: 实际发生了什么？
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 打开...
+        2. 点击...
+        3. 观察...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期行为
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境
+      description: 设备、浏览器、页面地址、减少动画设置和登录/访客状态。不要填写邮箱、令牌或其他私人数据。
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 脱敏证据
+      description: 可附日志或截图，但必须移除账号、密钥、Cookie、未公开投稿和未授权作品素材。
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我已搜索现有Issue，没有找到同一问题。
+          required: true
+        - label: 此报告不包含安全漏洞、私人信息、密钥或未授权媒体。
+          required: true

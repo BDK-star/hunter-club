@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Next.js and build outputs
+.next/
+out/
+dist/
+build/
+coverage/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and runtime state
+*.log
+logs/
+.vercel/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Test artifacts
+playwright-report/
+test-results/
+blob-report/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak

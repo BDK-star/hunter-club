@@ -1,0 +1,14 @@
+# Bootstrap owner. Add a second trusted maintainer before enforcing one
+# approving review on pull requests authored by the repository owner.
+* @BDK-star
+
+# High-risk architecture and governance surfaces
+/CONTEXT.md @BDK-star
+/docs/architecture/ @BDK-star
+/docs/adr/ @BDK-star
+/.github/ @BDK-star
+/scripts/ @BDK-star
+/LICENSE @BDK-star
+/NOTICE @BDK-star
+/ASSET_LICENSES.md @BDK-star
+/SECURITY.md @BDK-star

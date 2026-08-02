@@ -1,0 +1,50 @@
+name: 架构变更提案
+description: 提议改变已接受ADR、模块边界或数据所有权
+title: "[Architecture] "
+labels: ["type: architecture", "status: needs-decision"]
+body:
+  - type: input
+    id: existing
+    attributes:
+      label: 受影响的ADR或决策编号
+      placeholder: ADR-0001 / D08
+    validations:
+      required: true
+  - type: textarea
+    id: pressure
+    attributes:
+      label: 变更压力与证据
+      description: 当前决策造成了什么可测量问题？
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: 建议决策
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 替代方案及拒绝原因
+    validations:
+      required: true
+  - type: textarea
+    id: consequences
+    attributes:
+      label: 正面、负面和不可逆后果
+    validations:
+      required: true
+  - type: textarea
+    id: migration
+    attributes:
+      label: 迁移、兼容和回退计划
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我会新增替代ADR，不直接重写已接受ADR的历史结论。
+          required: true

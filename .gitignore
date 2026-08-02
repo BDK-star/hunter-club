@@ -7,6 +7,8 @@ out/
 dist/
 build/
 coverage/
+*.tsbuildinfo
+.pnpm-store/
 
 # Local environment and secrets
 .env

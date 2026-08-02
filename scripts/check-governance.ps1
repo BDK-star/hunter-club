@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $failures = [System.Collections.Generic.List[string]]::new()
+$ignoredDirectoryPattern = '[\\/](?:\.git|node_modules|\.next|\.pnpm-store|coverage)[\\/]'
 
 function Add-Failure {
     param([string]$Message)
@@ -26,6 +27,9 @@ $requiredFiles = @(
     '.github/ISSUE_TEMPLATE/architecture_change.yml',
     '.github/rulesets/main.json',
     '.github/workflows/governance.yml',
+    '.github/workflows/quality.yml',
+    'package.json',
+    'pnpm-lock.yaml',
     'docs/decision-register.md',
     'docs/adr/README.md',
     'docs/adr/template.md'
@@ -39,7 +43,7 @@ foreach ($relativePath in $requiredFiles) {
 }
 
 $markdownFiles = Get-ChildItem -LiteralPath $repositoryRoot -Recurse -Filter '*.md' -File |
-    Where-Object { $_.FullName -notmatch '[\\/]\.git[\\/]' }
+    Where-Object { $_.FullName -notmatch $ignoredDirectoryPattern }
 
 foreach ($file in $markdownFiles) {
     $lines = Get-Content -Encoding UTF8 -LiteralPath $file.FullName
@@ -103,7 +107,7 @@ $secretPatterns = @(
 $textExtensions = @('.md', '.txt', '.yml', '.yaml', '.json', '.toml', '.ps1', '.ts', '.tsx', '.js', '.mjs', '.cjs')
 $textFiles = Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File |
     Where-Object {
-        $_.FullName -notmatch '[\\/]\.git[\\/]' -and
+        $_.FullName -notmatch $ignoredDirectoryPattern -and
         ($textExtensions -contains $_.Extension.ToLowerInvariant() -or $_.Name -in @('NOTICE', 'LICENSE'))
     }
 foreach ($file in $textFiles) {
@@ -119,7 +123,7 @@ $assetLicenseText = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $rep
 $mediaExtensions = @('.png', '.jpg', '.jpeg', '.webp', '.avif', '.gif', '.svg', '.mp3', '.wav', '.flac', '.mp4', '.mov', '.woff', '.woff2')
 $mediaFiles = Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File |
     Where-Object {
-        $_.FullName -notmatch '[\\/]\.git[\\/]' -and
+        $_.FullName -notmatch $ignoredDirectoryPattern -and
         $mediaExtensions -contains $_.Extension.ToLowerInvariant()
     }
 foreach ($file in $mediaFiles) {

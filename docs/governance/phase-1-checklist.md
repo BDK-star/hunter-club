@@ -20,7 +20,7 @@
 - [x] `compose.yaml`提供本地原生PostgreSQL服务定义。
 - [ ] 在原生PostgreSQL 18上执行迁移和就绪检查。本机当前未安装Docker兼容运行时。
 - [x] Supabase开发项目`hunter-club-dev`已创建，状态健康，区域为新加坡。
-- [ ] Supabase开发项目已配置运行时池连接和独立迁移连接。
+- [x] Vercel Preview环境已分别配置Supabase运行时池连接和独立迁移连接；变量值未进入仓库或核验记录。
 
 ## 架构与质量
 
@@ -32,8 +32,9 @@
 
 ## 部署
 
-- [ ] Vercel项目已连接GitHub仓库并成功生成隔离预览。
-- [ ] 预览环境只使用开发数据库和合成数据，不包含生产秘密。
+- [x] Vercel项目`hunter-club`已连接GitHub仓库，生产域名已生成且现有部署状态为`Ready`。
+- [ ] Draft PR分支已成功生成隔离预览。
+- [x] 数据库连接变量仅配置在Preview环境，指向Supabase开发项目；阶段1没有生产数据。
 - [ ] 预览环境的主页、`/health/live`和`/health/ready`冒烟通过。
 
 阶段1只有在所有未完成项关闭后才能退出。本地骨架完成不等于云端环境已经就绪。
@@ -46,4 +47,5 @@
 - Quality：<https://github.com/BDK-star/hunter-club/actions/runs/30736300981>
 - 本地冒烟：主页与`/health/live`返回200；没有数据库服务时`/health/ready`返回稳定503。
 - Supabase开发项目：`hunter-club-dev`（项目引用`yaatxtombsxziktvphvk`），2026-08-02控制台显示状态`Healthy`、区域`ap-southeast-1`；未把数据库密码或连接串写入仓库。
-- Vercel账号已登录但尚无项目；控制台导入页连续超时，未创建重复项目，也未把未完成部署记为成功。
+- Vercel项目：`hunter-club`已连接`BDK-star/hunter-club`；2026-08-02控制台显示阶段0生产部署`Ready`，域名为<https://hunter-club-flame.vercel.app>。
+- Vercel环境变量：`DATABASE_URL`、`DATABASE_MIGRATION_URL`、`APP_ENV`和`LOG_LEVEL`仅为Preview作用域；只核验名称和作用域，未读取变量值。

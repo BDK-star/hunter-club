@@ -24,6 +24,7 @@ $requiredFiles = @(
     '.github/ISSUE_TEMPLATE/bug_report.yml',
     '.github/ISSUE_TEMPLATE/feature_request.yml',
     '.github/ISSUE_TEMPLATE/architecture_change.yml',
+    '.github/rulesets/main.json',
     '.github/workflows/governance.yml',
     'docs/decision-register.md',
     'docs/adr/README.md',

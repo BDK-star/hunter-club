@@ -19,7 +19,8 @@
 - [x] Drizzle版本化基线迁移存在，并在隔离PostgreSQL引擎中应用成功。
 - [x] `compose.yaml`提供本地原生PostgreSQL服务定义。
 - [ ] 在原生PostgreSQL 18上执行迁移和就绪检查。本机当前未安装Docker兼容运行时。
-- [ ] Supabase开发项目已创建并配置运行时池连接和独立迁移连接。
+- [x] Supabase开发项目`hunter-club-dev`已创建，状态健康，区域为新加坡。
+- [ ] Supabase开发项目已配置运行时池连接和独立迁移连接。
 
 ## 架构与质量
 
@@ -44,3 +45,5 @@
 - Governance与DCO：<https://github.com/BDK-star/hunter-club/actions/runs/30736300968>
 - Quality：<https://github.com/BDK-star/hunter-club/actions/runs/30736300981>
 - 本地冒烟：主页与`/health/live`返回200；没有数据库服务时`/health/ready`返回稳定503。
+- Supabase开发项目：`hunter-club-dev`（项目引用`yaatxtombsxziktvphvk`），2026-08-02控制台显示状态`Healthy`、区域`ap-southeast-1`；未把数据库密码或连接串写入仓库。
+- Vercel账号已登录但尚无项目；控制台导入页连续超时，未创建重复项目，也未把未完成部署记为成功。

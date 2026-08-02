@@ -27,7 +27,7 @@
 - [x] 自动依赖检查禁止循环、领域层技术依赖、跨模块内部导入和表现层直连仓储。
 - [x] 单元测试、迁移测试、Lint、严格类型检查和生产构建通过。
 - [x] GitHub Actions质量流水线定义存在，第三方Action固定到提交SHA。
-- [ ] 远端Pull Request上的`Governance`、`DCO`和`Quality`检查全部通过。
+- [x] 远端Pull Request上的`Governance`、`DCO`和`Quality`检查全部通过。
 
 ## 部署
 
@@ -36,3 +36,11 @@
 - [ ] 预览环境的主页、`/health/live`和`/health/ready`冒烟通过。
 
 阶段1只有在所有未完成项关闭后才能退出。本地骨架完成不等于云端环境已经就绪。
+
+## 当前证据
+
+- 功能提交：`2c586a9061736d6f80364613c994ee3c23bbce99`
+- Draft Pull Request：<https://github.com/BDK-star/hunter-club/pull/2>
+- Governance与DCO：<https://github.com/BDK-star/hunter-club/actions/runs/30736300968>
+- Quality：<https://github.com/BDK-star/hunter-club/actions/runs/30736300981>
+- 本地冒烟：主页与`/health/live`返回200；没有数据库服务时`/health/ready`返回稳定503。

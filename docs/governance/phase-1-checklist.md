@@ -33,9 +33,9 @@
 ## 部署
 
 - [x] Vercel项目`hunter-club`已连接GitHub仓库，生产域名已生成且现有部署状态为`Ready`。
-- [ ] Draft PR分支已成功生成隔离预览。
+- [x] Draft PR分支已成功生成隔离预览。
 - [x] 数据库连接变量仅配置在Preview环境，指向Supabase开发项目；阶段1没有生产数据。
-- [ ] 预览环境的主页、`/health/live`和`/health/ready`冒烟通过。
+- [x] 预览环境的主页、`/health/live`和`/health/ready`冒烟通过。
 
 阶段1只有在所有未完成项关闭后才能退出。本地骨架完成不等于云端环境已经就绪。
 
@@ -49,3 +49,5 @@
 - Supabase开发项目：`hunter-club-dev`（项目引用`yaatxtombsxziktvphvk`），2026-08-02控制台显示状态`Healthy`、区域`ap-southeast-1`；未把数据库密码或连接串写入仓库。
 - Vercel项目：`hunter-club`已连接`BDK-star/hunter-club`；2026-08-02控制台显示阶段0生产部署`Ready`，域名为<https://hunter-club-flame.vercel.app>。
 - Vercel环境变量：`DATABASE_URL`、`DATABASE_MIGRATION_URL`、`APP_ENV`和`LOG_LEVEL`仅为Preview作用域；只核验名称和作用域，未读取变量值。
+- Vercel Preview：提交`c91fb86094a27b30c663040b3be303355a00d0de`部署成功，地址为<https://hunter-club-git-feat-phase-1-runnable-aba586-bdk-stars-projects.vercel.app>。
+- 2026-08-05认证浏览器冒烟：首页标题为`Hunter Club`并显示阶段1施工页；`/health/live`返回`status: ok`、`process: up`和请求ID；`/health/ready`返回`status: ok`、`database: up`和请求ID。

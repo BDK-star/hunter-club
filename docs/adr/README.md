@@ -18,3 +18,4 @@ ADR记录已经接受、对未来实现有显著约束的技术与产品架构�
 - [ADR-0005：应用用户与认证身份分离](0005-authentication.md)
 - [ADR-0006：数据库搜索起步并保留替换端口](0006-search-evolution.md)
 - [ADR-0007：试运行采用GitHub、Vercel与Supabase](0007-trial-deployment.md)
+- [ADR-0008：采用Drizzle迁移与Postgres.js运行时驱动](0008-drizzle-postgres-runtime.md)

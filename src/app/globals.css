@@ -1,0 +1,135 @@
+:root {
+  --color-ink: #f7ead1;
+  --color-ink-muted: #cbbca4;
+  --color-night: #130e0c;
+  --color-panel: #231813;
+  --color-line: #5d4436;
+  --color-gold: #d5a84d;
+  --color-gold-bright: #f2c86d;
+  --shadow-card: 0 24px 80px rgb(0 0 0 / 42%);
+  --radius-card: 1.5rem;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-night);
+}
+
+body {
+  margin: 0;
+  color: var(--color-ink);
+  background:
+    radial-gradient(circle at 50% 10%, rgb(99 61 34 / 42%), transparent 42rem),
+    linear-gradient(180deg, #1b120e, var(--color-night));
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+.shell {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 4rem);
+}
+
+.status-card {
+  width: min(46rem, 100%);
+  padding: clamp(1.5rem, 5vw, 4rem);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: linear-gradient(145deg, rgb(48 32 24 / 95%), rgb(29 19 15 / 97%));
+  box-shadow: var(--shadow-card);
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  color: var(--color-gold-bright);
+  font:
+    700 0.75rem/1.4 ui-monospace,
+    "Cascadia Code",
+    monospace;
+  letter-spacing: 0.18em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 8vw, 5.4rem);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: 38rem;
+  margin: 1.5rem 0 0;
+  color: var(--color-ink-muted);
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  line-height: 1.8;
+}
+
+.foundation-list {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 2rem 0;
+  list-style: none;
+}
+
+.foundation-list li {
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--color-gold);
+  background: rgb(255 255 255 / 4%);
+}
+
+.health-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.health-links a,
+.primary-link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--color-gold);
+  border-radius: 999px;
+  color: var(--color-gold-bright);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.health-links a:focus-visible,
+.health-links a:hover,
+.primary-link:focus-visible,
+.primary-link:hover {
+  color: var(--color-night);
+  background: var(--color-gold-bright);
+  outline: 3px solid rgb(242 200 109 / 30%);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .health-links a,
+  .primary-link {
+    transition:
+      color 140ms ease,
+      background-color 140ms ease;
+  }
+}

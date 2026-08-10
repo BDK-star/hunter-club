@@ -2,7 +2,7 @@
 
 面向全球中文《HUNTER×HUNTER》爱好者的非官方内容与交流网站。项目以一座美式西部酒吧作为叙事化门户：用户从酒吧门进入，在2.5D场景中与NPC对话，并由NPC进入资料库、念能力测试、投稿、讨论等标准功能页面。
 
-> 当前状态：阶段1可运行骨架。酒吧场景和NPC将在阶段2实现。
+> 当前状态：阶段2酒吧入口纵向切片。首项工作是清理阶段1合并后发现的依赖安全技术债。
 
 ## 已确认的产品方向
 
@@ -32,6 +32,7 @@
 - [质量门槛](docs/architecture/quality-gates.md)
 - [MVP交付路线](docs/roadmap/mvp-delivery-plan.md)
 - [阶段1完成清单](docs/governance/phase-1-checklist.md)
+- [阶段2完成清单](docs/governance/phase-2-checklist.md)
 - [阶段1环境接入手册](docs/runbooks/phase-1-environments.md)
 
 关键架构选择记录在 [`docs/adr`](docs/adr/) 下。实现阶段的Pull Request必须遵守这些边界；若要改变已接受决策，应先新增或替代ADR。

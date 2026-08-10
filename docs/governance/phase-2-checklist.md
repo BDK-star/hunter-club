@@ -10,11 +10,13 @@
 - [x] 更新顶层`tsx`，并对`drizzle-kit`遗留loader使用窄范围`esbuild`覆盖，关闭两条`esbuild`告警。
 - [x] 使用官方npm审计源确认高、中、低、严重漏洞均为0。
 - [x] 验证Drizzle CLI、单元测试、集成测试、严格类型、架构边界和生产构建。
-- [ ] 推送后确认GitHub Dependabot的8条关联告警全部关闭。
+- [x] 合并后确认GitHub Dependabot的8条关联告警全部关闭。
 
 2026-08-08基线：Dependabot共有8条开放告警，按升级单元归为`nanoid`、`postcss`、`sharp`和`esbuild`4个依赖族；严重度为4条高、3条中、1条低、0条严重。生产依赖风险优先于场景功能开发。
 
 本地修复证据：Next.js与ESLint配置升级到16.3.0，`tsx`升级到4.23.9；锁文件解析为PostCSS 8.5.23/8.5.25、Sharp 0.35.3、Nano ID 3.3.17以及esbuild 0.25.4/0.28.1。官方npm审计源报告0条漏洞；Drizzle Kit 0.31.10可启动，6个单元测试文件的10项测试、1项集成测试和生产构建通过。`pnpm-workspace.yaml`仅允许esbuild与Sharp执行安装脚本；当Drizzle Kit移除已废弃的`@esbuild-kit` loader后，应删除对应的窄范围覆盖。
+
+远端闭环证据：2026-08-10，[Pull Request #3](https://github.com/BDK-star/hunter-club/pull/3)以Squash方式合并为`a1eccb69e246c4ed93d86164fed1e7fe41b4304e`；主干[Quality](https://github.com/BDK-star/hunter-club/actions/runs/31377828337)与[Governance](https://github.com/BDK-star/hunter-club/actions/runs/31377828209)成功，Vercel生产部署完成，Dependabot开放告警查询结果为空。
 
 ## 酒吧入口纵向切片
 

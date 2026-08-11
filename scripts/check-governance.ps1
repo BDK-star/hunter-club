@@ -126,8 +126,14 @@ $mediaFiles = Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File |
         $_.FullName -notmatch $ignoredDirectoryPattern -and
         $mediaExtensions -contains $_.Extension.ToLowerInvariant()
     }
+$repositoryRootPrefix = $repositoryRoot.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar
 foreach ($file in $mediaFiles) {
-    $relativePath = [System.IO.Path]::GetRelativePath($repositoryRoot, $file.FullName).Replace('\', '/')
+    $fullMediaPath = [System.IO.Path]::GetFullPath($file.FullName)
+    if (-not $fullMediaPath.StartsWith($repositoryRootPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+        Add-Failure "Media asset resolved outside repository root: $fullMediaPath"
+        continue
+    }
+    $relativePath = $fullMediaPath.Substring($repositoryRootPrefix.Length).Replace('\', '/')
     if ($assetLicenseText -notmatch [regex]::Escape($relativePath)) {
         Add-Failure "Media asset is not registered in ASSET_LICENSES.md: $relativePath"
     }

@@ -5,6 +5,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      update_visual_baselines:
+        description: Generate reviewed visual baselines on the canonical CI image
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -14,8 +20,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  quality:
-    name: Quality
+  core-quality:
+    name: Core Quality
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -41,3 +47,62 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Run complete quality gate
         run: pnpm quality
+
+  browser-experience:
+    name: Browser Experience
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      APP_BASE_URL: http://localhost:3000
+      APP_ENV: test
+      CI: true
+      DATABASE_MIGRATION_URL: postgresql://ci:ci@localhost:5432/ci
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      LOG_LEVEL: error
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: 11.9.0
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build production application
+        run: pnpm build
+      - name: Install Chromium for experience tests
+        run: pnpm exec playwright install chromium
+      - name: Run browser experience gate
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.update_visual_baselines }}
+        run: pnpm test:e2e
+      - name: Generate canonical visual baselines
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines }}
+        run: pnpm test:e2e:update
+      - name: Upload canonical visual baselines
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: saloon-visual-baselines-${{ github.sha }}
+          path: tests/e2e/__screenshots__
+          if-no-files-found: error
+          retention-days: 7
+
+  quality:
+    name: Quality
+    if: ${{ always() }}
+    needs: [core-quality, browser-experience]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require all quality jobs
+        env:
+          BROWSER_EXPERIENCE_RESULT: ${{ needs.browser-experience.result }}
+          CORE_QUALITY_RESULT: ${{ needs.core-quality.result }}
+        run: |
+          test "$CORE_QUALITY_RESULT" = "success"
+          test "$BROWSER_EXPERIENCE_RESULT" = "success"

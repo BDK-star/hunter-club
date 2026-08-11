@@ -65,6 +65,10 @@
 - 图片、音频或动画资源失败。
 - 慢速网络和低端CPU模拟。
 
+阶段2通过`pnpm test:e2e`将当前可运行范围纳入浏览器门禁：桌面、平板、手机视觉基线；键盘与触摸核心旅程；Axe自动无障碍扫描；JavaScript关闭时的标准URL降级；减少动画；首屏资源、LCP、CLS和交互实验室预算。
+
+视觉基线以GitHub Actions的`windows-latest`浏览器环境为规范环境，避免开发机字体和图形栅格差异造成伪失败。需要更新时，只能手动触发`Application Quality`工作流并启用`update_visual_baselines`；下载`saloon-visual-baselines-*`产物，逐张人工审阅后再提交。Pull Request和`main`分支运行始终只比较基线，不能自动接受差异。新图片还必须登记媒体资产。
+
 ## 性能预算
 
 | 指标 | 门槛 |

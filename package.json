@@ -20,6 +20,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots",
     "architecture:check": "depcruise --config dependency-cruiser.config.mjs src",
     "experience:check": "tsx scripts/check-experience.ts",
     "config:check": "tsx scripts/check-config.ts",
@@ -28,8 +30,8 @@
     "quality": "pnpm config:check && pnpm format:check && pnpm lint && pnpm typecheck && pnpm architecture:check && pnpm experience:check && pnpm test && pnpm test:integration && pnpm build"
   },
   "dependencies": {
-    "drizzle-orm": "0.45.2",
     "dotenv": "17.2.3",
+    "drizzle-orm": "0.45.2",
     "next": "16.3.0",
     "pino": "10.3.1",
     "postgres": "3.4.9",
@@ -39,7 +41,9 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
     "@electric-sql/pglite": "0.5.4",
+    "@playwright/test": "1.62.1",
     "@types/node": "24.10.1",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

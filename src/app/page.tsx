@@ -32,12 +32,6 @@ export default function HomePage() {
         <div className="moon" aria-hidden="true" />
         <div className="mesa mesa-left" aria-hidden="true" />
         <div className="mesa mesa-right" aria-hidden="true" />
-        <div className="saloon-facade" aria-hidden="true">
-          <div className="saloon-sign">HUNTER · CLUB</div>
-          <div className="window window-left" />
-          <div className="window window-right" />
-        </div>
-
         <div className="exterior-copy">
           <p className="eyebrow">PHASE 2 · SALOON EXTERIOR</p>
           <h1 id="exterior-title">
@@ -48,48 +42,56 @@ export default function HomePage() {
           <p className="lede">{experience.copy[scene.descriptionKey]}</p>
         </div>
 
-        <details className="entry-ledger">
-          <summary className="saloon-door">
-            <span className="door-star" aria-hidden="true">
-              ✦
-            </span>
-            <span>推门</span>
-            <small>ENTER THE SALOON</small>
-          </summary>
-          <div className="entry-panel">
-            <p className="eyebrow">VISITOR LEDGER</p>
-            <h2>先约定剧透边界</h2>
-            <p>阶段2允许旅客直接进入。账号登记会在身份系统完成后开放。</p>
-            <form action="/saloon" method="get">
-              <fieldset>
-                <legend>本次浏览显示到哪里？</legend>
-                <label>
-                  <input
-                    defaultChecked
-                    name="spoilers"
-                    type="radio"
-                    value="safe"
-                  />
-                  <span>低剧透</span>
-                  <small>只显示入口与功能说明</small>
-                </label>
-                <label>
-                  <input name="spoilers" type="radio" value="anime" />
-                  <span>动画进度</span>
-                  <small>允许动画范围提示</small>
-                </label>
-                <label>
-                  <input name="spoilers" type="radio" value="manga" />
-                  <span>漫画进度</span>
-                  <small>允许漫画范围提示</small>
-                </label>
-              </fieldset>
-              <button className="primary-action" type="submit">
-                以旅客身份进入
-              </button>
-            </form>
+        <div className="saloon-stage">
+          <div className="saloon-facade" aria-hidden="true">
+            <div className="saloon-sign">HUNTER · CLUB</div>
+            <div className="window window-left" />
+            <div className="window window-right" />
           </div>
-        </details>
+
+          <details className="entry-ledger">
+            <summary className="saloon-door">
+              <span className="door-star" aria-hidden="true">
+                ✦
+              </span>
+              <span>推门</span>
+              <small>ENTER THE SALOON</small>
+            </summary>
+            <div className="entry-panel">
+              <p className="eyebrow">VISITOR LEDGER</p>
+              <h2>先约定剧透边界</h2>
+              <p>阶段2允许旅客直接进入。账号登记会在身份系统完成后开放。</p>
+              <form action="/saloon" method="get">
+                <fieldset>
+                  <legend>本次浏览显示到哪里？</legend>
+                  <label>
+                    <input
+                      defaultChecked
+                      name="spoilers"
+                      type="radio"
+                      value="safe"
+                    />
+                    <span>低剧透</span>
+                    <small>只显示入口与功能说明</small>
+                  </label>
+                  <label>
+                    <input name="spoilers" type="radio" value="anime" />
+                    <span>动画进度</span>
+                    <small>允许动画范围提示</small>
+                  </label>
+                  <label>
+                    <input name="spoilers" type="radio" value="manga" />
+                    <span>漫画进度</span>
+                    <small>允许漫画范围提示</small>
+                  </label>
+                </fieldset>
+                <button className="primary-action" type="submit">
+                  以旅客身份进入
+                </button>
+              </form>
+            </div>
+          </details>
+        </div>
       </section>
 
       <footer className="scene-footer">

@@ -5,6 +5,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      update_visual_baselines:
+        description: Generate reviewed visual baselines on the canonical CI image
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -72,7 +78,19 @@ jobs:
       - name: Install Chromium for experience tests
         run: pnpm exec playwright install chromium
       - name: Run browser experience gate
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.update_visual_baselines }}
         run: pnpm test:e2e
+      - name: Generate canonical visual baselines
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines }}
+        run: pnpm test:e2e:update
+      - name: Upload canonical visual baselines
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.update_visual_baselines }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: saloon-visual-baselines-${{ github.sha }}
+          path: tests/e2e/__screenshots__
+          if-no-files-found: error
+          retention-days: 7
 
   quality:
     name: Quality

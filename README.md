@@ -2,7 +2,7 @@
 
 面向全球中文《HUNTER×HUNTER》爱好者的非官方内容与交流网站。项目以一座美式西部酒吧作为叙事化门户：用户从酒吧门进入，在2.5D场景中与NPC对话，并由NPC进入资料库、念能力测试、投稿、讨论等标准功能页面。
 
-> 当前状态：阶段2酒吧入口纵向切片已完成并部署。依赖安全技术债、门外、大厅、NPC对话、资料库导览及浏览器体验门禁均已交付。
+> 当前状态：阶段2已完成并部署；阶段3正在开发身份、资料、出版和搜索基础。已落地版本化数据模型、`aal2`授权策略、Supabase登录适配器、安全内部会话、不可变内容修订、发布计划服务和可重建PostgreSQL搜索投影；供应商控制台验收、原子发布存储、编辑界面与公开检索仍未完成。
 
 ## 已确认的产品方向
 
@@ -33,7 +33,9 @@
 - [MVP交付路线](docs/roadmap/mvp-delivery-plan.md)
 - [阶段1完成清单](docs/governance/phase-1-checklist.md)
 - [阶段2完成清单](docs/governance/phase-2-checklist.md)
+- [阶段3完成清单](docs/governance/phase-3-checklist.md)
 - [阶段1环境接入手册](docs/runbooks/phase-1-environments.md)
+- [阶段3认证配置与验收](docs/runbooks/phase-3-auth.md)
 
 关键架构选择记录在 [`docs/adr`](docs/adr/) 下。实现阶段的Pull Request必须遵守这些边界；若要改变已接受决策，应先新增或替代ADR。
 

@@ -43,6 +43,144 @@ summary {
   font: inherit;
 }
 
+.auth-page {
+  min-height: 100svh;
+  background:
+    radial-gradient(
+      circle at 75% 18%,
+      rgb(216 166 78 / 16%),
+      transparent 25rem
+    ),
+    linear-gradient(150deg, #120c0c, #2a1711 58%, #100b0b);
+}
+
+.auth-ledger {
+  width: min(48rem, calc(100% - 2rem));
+  margin: clamp(3rem, 9vh, 8rem) auto 0;
+  padding: clamp(1.5rem, 5vw, 3.5rem);
+  border: 1px solid rgb(216 166 78 / 42%);
+  border-radius: 0.35rem;
+  background:
+    linear-gradient(rgb(25 14 12 / 94%), rgb(25 14 12 / 94%)), var(--wood-dark);
+  box-shadow: var(--shadow);
+}
+
+.auth-ledger h1 {
+  max-width: 10ch;
+  font-size: clamp(2.6rem, 7vw, 5rem);
+}
+
+.auth-options {
+  display: grid;
+  gap: 1.2rem;
+  margin-top: 2rem;
+}
+
+.auth-form {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.auth-form > label {
+  color: var(--gold-bright);
+  font-weight: 700;
+}
+
+.auth-form small {
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+.auth-otp-form {
+  border-top: 1px solid rgb(216 166 78 / 18%);
+  padding-top: 1rem;
+}
+
+.auth-otp-form > input {
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+  padding: 0.85rem 1rem;
+  color: var(--ink);
+  background: rgb(10 7 7 / 68%);
+}
+
+.auth-field-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.7rem;
+}
+
+.auth-field-row input {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+  padding: 0.85rem 1rem;
+  color: var(--ink);
+  background: rgb(10 7 7 / 68%);
+}
+
+.auth-divider {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  height: 1px;
+  background: rgb(216 166 78 / 25%);
+  content: "";
+}
+
+.auth-github {
+  width: 100%;
+}
+
+.auth-notice,
+.auth-error {
+  margin: 1.5rem 0 0;
+  border-left: 3px solid var(--teal);
+  padding: 0.85rem 1rem;
+  color: var(--ink);
+  background: rgb(44 119 115 / 16%);
+  line-height: 1.6;
+}
+
+.auth-error {
+  border-left-color: var(--red);
+  background: rgb(140 48 41 / 16%);
+}
+
+.auth-exits {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.auth-exits > a:not(.primary-action) {
+  color: var(--ink-muted);
+}
+
+.entry-auth {
+  display: inline-flex;
+  margin: 0.4rem 0 1rem;
+}
+
+@media (max-width: 38rem) {
+  .auth-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-field-row .primary-action {
+    width: 100%;
+  }
+}
+
 button,
 summary {
   cursor: pointer;

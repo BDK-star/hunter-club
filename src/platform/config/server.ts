@@ -1,14 +1,34 @@
 import { z } from "zod";
 
-const serverEnvironmentSchema = z.object({
-  APP_BASE_URL: z.url(),
-  APP_ENV: z.enum(["local", "test", "preview", "production"]),
-  DATABASE_MIGRATION_URL: z.url({ protocol: /^postgres(ql)?$/ }),
-  DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
-  LOG_LEVEL: z
-    .enum(["trace", "debug", "info", "warn", "error", "fatal"])
-    .default("info"),
-});
+const serverEnvironmentSchema = z
+  .object({
+    APP_BASE_URL: z.url(),
+    APP_ENV: z.enum(["local", "test", "preview", "production"]),
+    DATABASE_MIGRATION_URL: z.url({ protocol: /^postgres(ql)?$/ }),
+    DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
+    LOG_LEVEL: z
+      .enum(["trace", "debug", "info", "warn", "error", "fatal"])
+      .default("info"),
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(20).optional(),
+    NEXT_PUBLIC_SUPABASE_URL: z.url({ protocol: /^https?$/ }).optional(),
+  })
+  .superRefine((environment, context) => {
+    const hasKey =
+      environment.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY !== undefined;
+    const hasUrl = environment.NEXT_PUBLIC_SUPABASE_URL !== undefined;
+    if (hasKey !== hasUrl) {
+      context.addIssue({
+        code: "custom",
+        message:
+          "Supabase Auth URL and publishable key must be configured together",
+        path: [
+          hasKey
+            ? "NEXT_PUBLIC_SUPABASE_URL"
+            : "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+        ],
+      });
+    }
+  });
 
 export type ServerEnvironment = Readonly<{
   appBaseUrl: string;
@@ -16,6 +36,10 @@ export type ServerEnvironment = Readonly<{
   databaseMigrationUrl: string;
   databaseUrl: string;
   logLevel: z.infer<typeof serverEnvironmentSchema>["LOG_LEVEL"];
+  supabaseAuth: Readonly<{
+    publishableKey: string;
+    url: string;
+  }> | null;
 }>;
 
 export class InvalidServerEnvironmentError extends Error {
@@ -43,5 +67,13 @@ export function parseServerEnvironment(
     databaseMigrationUrl: result.data.DATABASE_MIGRATION_URL,
     databaseUrl: result.data.DATABASE_URL,
     logLevel: result.data.LOG_LEVEL,
+    supabaseAuth:
+      result.data.NEXT_PUBLIC_SUPABASE_URL &&
+      result.data.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+        ? Object.freeze({
+            publishableKey: result.data.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+            url: new URL(result.data.NEXT_PUBLIC_SUPABASE_URL).toString(),
+          })
+        : null,
   });
 }

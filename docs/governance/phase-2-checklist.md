@@ -32,7 +32,7 @@
 
 - [x] 访客无需登录即可从酒吧入口进入一个真实内容页面。
 - [x] 资源失败时核心导航仍可使用。
-- [ ] 本地质量门、Pull Request门禁、Vercel Preview和生产冒烟全部通过。
+- [x] 本地质量门、Pull Request门禁、Vercel Preview和生产冒烟全部通过。
 
 阶段2只有在全部退出条件关闭后才能结束。阶段2不得提前实现身份、出版、念能力测试计分或社区写入闭环。
 
@@ -47,3 +47,5 @@
 - 键盘旅程使用Enter打开门和提交表单；平板、手机旅程使用触摸事件；三种视口均完成门外→大厅→探险者对话→资料库。JavaScript关闭后，标准URL仍可从门外进入大厅和资料库。
 - Axe按WCAG 2 A/AA与WCAG 2.1 A/AA标签扫描门外关闭、登记面板打开、大厅及资料库状态，未报告自动可检测违规。自动扫描不能替代人工读屏软件兼容性验证，因此这里证明的是核心语义、名称、焦点和常见规则门禁，不宣称完整WCAG符合性。
 - 15张视觉基线覆盖三种视口的门外关闭、登记面板打开、大厅、探险者对话和资料库。首屏实验室预算实测：关键压缩资源147,498字节、JavaScript 140,003字节、字体0字节、LCP 472毫秒、CLS 0、门展开至两帧稳定17.5毫秒；对应门槛分别为1.2 MiB、250 KiB、150 KiB、2.5秒、0.1和200毫秒。
+- 2026-08-11，[Pull Request #11](https://github.com/BDK-star/hunter-club/pull/11)以Squash方式合并为`d7332b402885193a55e81606a35fe3b87ba8d4f4`。Pull Request的[Application Quality](https://github.com/BDK-star/hunter-club/actions/runs/31492180901)、Repository Governance、DCO与Vercel Preview部署全部成功；视觉比较在规范Windows/Chromium环境中通过，普通运行未自动更新基线。
+- 合并后的主干[Application Quality](https://github.com/BDK-star/hunter-club/actions/runs/31493046223)与[Repository Governance](https://github.com/BDK-star/hunter-club/actions/runs/31493046210)成功，Vercel生产部署状态为`Deployment has completed`。2026-08-12对<https://hunter-club-flame.vercel.app>执行生产冒烟：`/`、`/saloon?spoilers=safe`与`/library`均返回HTTP 200；页面标题、酒吧大厅标识、探险者、资料库链接和资料库正文断言通过，响应不是Vercel访问保护页。

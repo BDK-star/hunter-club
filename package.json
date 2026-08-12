@@ -28,6 +28,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
     "search:rebuild": "tsx scripts/rebuild-search.ts",
+    "seed:phase3": "tsx scripts/seed-phase3.ts",
     "quality": "pnpm config:check && pnpm format:check && pnpm lint && pnpm typecheck && pnpm architecture:check && pnpm experience:check && pnpm test && pnpm test:integration && pnpm build"
   },
   "dependencies": {

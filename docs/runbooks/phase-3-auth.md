@@ -61,6 +61,8 @@ on conflict (user_id, role_key) do nothing;
 
 首位管理员的引导属于部署所有者操作：先在Supabase完成登录与TOTP绑定，再通过Supabase SQL Editor仅授予已核对的内部`users.id`。不得根据邮箱模糊匹配，不得把提权SQL做成公开端点。完成后访问`/editorial`，确认`aal1`被拒绝、`aal2`可见差异和操作按钮。
 
+完成迁移和编辑账号开通后，把该内部ID临时写入本机`.env.local`的`PHASE3_EDITOR_USER_ID`，执行`pnpm seed:phase3`。命令幂等建立一项带集英社官方书目来源的低剧透角色草稿，不会自动审核或发布；随后必须通过`/editorial`人工审阅差异、记录审核理由并发布。完成后可从本机删除该临时变量。
+
 ## 6. 当前限制
 
 - TOTP注册、挑战和会话升级已实现；恢复码不由应用伪造，高权限账号恢复仍依赖Supabase控制台和双管理员运维流程。

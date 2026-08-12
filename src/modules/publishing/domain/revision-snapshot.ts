@@ -12,6 +12,7 @@ export type ArticleRevisionSnapshotV1 = Readonly<{
   body: string;
   canonStatus: CanonStatus;
   locale: string;
+  sourceReferenceIds: readonly string[];
   spoilerLevel: CatalogSpoilerLevel;
   title: string;
   type: "article";
@@ -74,6 +75,16 @@ function validateArticle(
   validateText(value.title, "title", 1, 200, issues);
   validateText(value.body, "body", 1, 100_000, issues);
   validateStringArray(value.aliases, "aliases", issues);
+  validateStringArray(value.sourceReferenceIds, "sourceReferenceIds", issues);
+  if (
+    Array.isArray(value.sourceReferenceIds) &&
+    value.sourceReferenceIds.length === 0
+  ) {
+    issues.push({
+      code: "article_missing_source",
+      path: "sourceReferenceIds",
+    });
+  }
   validateEnum(value.canonStatus, canonStatuses, "canonStatus", issues);
   validateEnum(value.spoilerLevel, spoilerLevels, "spoilerLevel", issues);
   if (value.canonStatus === "unverified") {

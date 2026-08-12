@@ -3,6 +3,24 @@ import { describe, expect, it } from "vitest";
 import { parsePublishedRevisionSnapshot } from "./revision-snapshot";
 
 describe("published revision snapshots", () => {
+  it("requires article sources", () => {
+    expect(
+      parsePublishedRevisionSnapshot({
+        aliases: [],
+        body: "公开正文",
+        canonStatus: "canon",
+        locale: "zh-CN",
+        sourceReferenceIds: [],
+        spoilerLevel: "safe",
+        title: "猎人考试指南",
+        type: "article",
+      }),
+    ).toMatchObject({
+      issues: [{ code: "article_missing_source", path: "sourceReferenceIds" }],
+      ok: false,
+    });
+  });
+
   it("accepts a sourced catalog snapshot", () => {
     expect(
       parsePublishedRevisionSnapshot({

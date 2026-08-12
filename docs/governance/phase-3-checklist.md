@@ -60,5 +60,7 @@
 - 2026-08-12阶段3首批全仓质量门通过：格式、Lint、严格类型、75个模块架构边界、体验合同、19个单元测试文件共46项、5个隔离数据库测试文件共21项，以及Next.js 16.3生产构建均成功。浏览器、Pull Request与部署门禁尚未执行。
 - 2026-08-12阶段3第二批全仓质量门通过：101个模块/130条依赖无违规，21个单元测试文件共51项、5个隔离数据库测试文件共23项及Next.js生产构建成功。新增动态路由为`/search`、`/library/[slug]`和`/articles/[slug]`；真实种子内容、浏览器、Pull Request与部署仍未验收。
 - 2026-08-12阶段3视觉基线由规范`windows-latest`手动工作流生成并逐张审阅；15张图仅门口登录入口的desktop/tablet/mobile基线发生预期变化。提交`f81a281`后，Pull Request #13在普通只比较模式下通过Browser Experience、Core Quality、Governance、DCO、Quality和Vercel Preview。
-- 编辑工作台通过`/editorial`提供当前发布与最新草稿的结构化差异；审核与发布Server Action重新解析会话并分别要求`content.review`/`content.publish`和`aal2`。发布前验证快照版本、来源、正典和剧透合同，事务移动指针后重建公开搜索投影。
+- 编辑工作台通过`/editorial`提供当前发布与最新草稿的结构化差异；“批准并发布”是单一Server Action和单一Postgres事务，重新解析会话并同时要求`content.review`、`content.publish`和`aal2`。页面渲染稳定命令令牌，重试复用审核与发布请求ID。事务验证快照版本及修订实际关联的来源，追加审核、移动指针、追加事件并重建公开搜索投影；任一步失败均整体回滚。
+- 登录回跳统一经过同源本地路径Module，拒绝协议相对路径、反斜杠、编码分隔符与控制字符；停用或删除用户在Identity事务内不能签发新会话。
 - 2026-08-12阶段3第三批全仓质量门通过：格式、Lint、严格类型、114个模块/160条依赖、体验合同、24个单元测试文件共55项、5个隔离数据库测试文件共25项，以及包含`/auth/mfa`和`/editorial`的Next.js生产构建均成功。
+- 架构复审后新增第9项迁移`revision_source_references`，把来源从快照字符串提升为受外键约束的修订关联。CI Core Quality现在启动PostgreSQL 18.1、先执行真实迁移，再通过`PostgresPublicationStore` Interface验证来源关联、整笔回滚和精确重放；PGlite继续覆盖可移植的迁移与数据库约束。本地完整门禁通过25个单元测试文件共65项、6个PGlite集成测试文件共26项；3个要求真实PostgreSQL的Store用例因本机Docker引擎未启动而明确跳过，必须以Pull Request的Core Quality结果为准。

@@ -137,6 +137,11 @@ try {
       )
       on conflict (id) do nothing
     `;
+    await transaction`
+      insert into revision_source_references (revision_id, source_reference_id)
+      values (${ids.revision}, ${ids.reference})
+      on conflict (revision_id, source_reference_id) do nothing
+    `;
   });
   process.stdout.write(
     `Phase 3 draft seed is ready: revision ${ids.revision}. Review and publish it through /editorial.\n`,

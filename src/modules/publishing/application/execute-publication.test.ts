@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  executeApprovalPublication,
   executePublication,
   type PublicationState,
   type PublicationStore,
@@ -21,6 +22,7 @@ const approvedState: PublicationState = {
     body: "已核对正文",
     canonStatus: "canon",
     locale: "zh-CN",
+    sourceReferenceIds: ["source-reference-1"],
     spoilerLevel: "safe",
     title: "测试文章",
     type: "article",
@@ -50,6 +52,32 @@ function command() {
 }
 
 describe("execute publication", () => {
+  it("commits approval and publication as one command", async () => {
+    const store = createStore({
+      ...approvedState,
+      latestReviewDecision: null,
+    });
+
+    await expect(
+      executeApprovalPublication(store, {
+        actorUserId: "editor-1",
+        principal: command().principal,
+        reason: "来源、正典与剧透边界已核对并批准发布",
+        requestId: "approval-publication-1",
+        revisionId: approvedState.requested.id,
+      }),
+    ).resolves.toMatchObject({ ok: true });
+    expect(store.commit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        approval: {
+          reason: "来源、正典与剧透边界已核对并批准发布",
+          requestId: "approval-publication-1:review",
+        },
+        requestId: "approval-publication-1:publish",
+      }),
+    );
+  });
+
   it("commits an approved publication after authorization", async () => {
     const store = createStore(approvedState);
 

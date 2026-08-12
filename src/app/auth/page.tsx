@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { isSupabaseAuthConfigured } from "@/platform/auth/supabase-server";
 import { getInternalSessionPrincipal } from "@/platform/auth/internal-session";
+import { resolveLocalReturnPath } from "@/shared-kernel/http/local-return-path";
 
 import {
   requestEmailOtp,
@@ -18,6 +19,7 @@ const errorMessages: Readonly<Record<string, string>> = {
   github_failed: "GitHub 暂时没有回应，请稍后重试。",
   identity_unsupported: "这个身份供应商尚未被酒馆接受。",
   identity_unverified: "身份尚未通过服务器验证。",
+  user_inactive: "账号已停用，不能建立新会话。",
   invalid_email: "请填写有效的邮箱地址。",
   invalid_otp: "请填写邮箱和六位验证码。",
   missing_code: "回调缺少登录凭证，请重新开始。",
@@ -38,7 +40,7 @@ type AuthPageProps = Readonly<{
 export default async function AuthPage({ searchParams }: AuthPageProps) {
   const parameters = await searchParams;
   const errorCode = singleValue(parameters.error);
-  const nextPath = safeNextPath(singleValue(parameters.next));
+  const nextPath = resolveLocalReturnPath(singleValue(parameters.next));
   const configured = isSupabaseAuthConfigured();
   const signedIn = await hasActiveSession();
 
@@ -173,12 +175,6 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
 
 function singleValue(value: string | string[] | undefined): string | null {
   return Array.isArray(value) ? (value[0] ?? null) : (value ?? null);
-}
-
-function safeNextPath(candidate: string | null): string {
-  return candidate?.startsWith("/") && !candidate.startsWith("//")
-    ? candidate
-    : "/saloon";
 }
 
 async function hasActiveSession(): Promise<boolean> {

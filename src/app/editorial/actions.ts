@@ -1,57 +1,34 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { unstable_rethrow } from "next/navigation";
 import { z } from "zod";
 
 import { requireInternalCapability } from "@/platform/auth/internal-session";
-import {
-  executeRuntimePublication,
-  recordRuntimeReview,
-} from "@/platform/publishing/runtime";
+import { executeRuntimeApprovalPublication } from "@/platform/publishing/runtime";
 
 const revisionIdSchema = z.uuid();
 const reasonSchema = z.string().trim().min(5).max(1000);
+const commandTokenSchema = z.string().regex(/^[0-9a-f]{64}$/);
 
-export async function approveRevision(formData: FormData): Promise<void> {
+export async function approveAndPublishRevision(
+  formData: FormData,
+): Promise<void> {
   const revisionId = revisionIdSchema.safeParse(formData.get("revisionId"));
   const reason = reasonSchema.safeParse(formData.get("reason"));
-  if (!revisionId.success || !reason.success)
-    redirect("/editorial?error=invalid_review");
-
-  try {
-    const principal = await requireInternalCapability("content.review");
-    const result = await recordRuntimeReview({
-      decision: "approved",
-      principal,
-      reason: reason.data,
-      requestId: `review:${randomUUID()}`,
-      revisionId: revisionId.data,
-    });
-    if (!result.ok) redirect(`/editorial?error=${result.issue}`);
-  } catch (error) {
-    unstable_rethrow(error);
-    redirect(`/editorial?error=${mapActionError(error)}`);
-  }
-  revalidatePath("/editorial");
-  redirect("/editorial?reviewed=1");
-}
-
-export async function publishRevision(formData: FormData): Promise<void> {
-  const revisionId = revisionIdSchema.safeParse(formData.get("revisionId"));
-  const reason = reasonSchema.safeParse(formData.get("reason"));
-  if (!revisionId.success || !reason.success)
+  const commandToken = commandTokenSchema.safeParse(
+    formData.get("commandToken"),
+  );
+  if (!revisionId.success || !reason.success || !commandToken.success)
     redirect("/editorial?error=invalid_publish");
 
   try {
-    const principal = await requireInternalCapability("content.publish");
-    const result = await executeRuntimePublication({
-      operation: "publish",
+    const principal = await requireInternalCapability("content.review");
+    const result = await executeRuntimeApprovalPublication({
       principal,
       reason: reason.data,
-      requestId: `publish:${randomUUID()}`,
+      requestId: `approval:${commandToken.data}`,
       revisionId: revisionId.data,
     });
     if (!result.ok)

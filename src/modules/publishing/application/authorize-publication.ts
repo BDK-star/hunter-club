@@ -6,10 +6,9 @@ import {
 
 export function authorizePublication(
   principal: AuthorizationPrincipal,
-  operation: "publish" | "rollback",
+  operation: "publish" | "review_and_publish" | "rollback",
 ): AuthorizationDecision {
-  return authorize(
-    principal,
-    operation === "publish" ? "content.publish" : "content.rollback",
-  );
+  if (operation === "rollback") return authorize(principal, "content.rollback");
+  const review = authorize(principal, "content.review");
+  return review.allowed ? authorize(principal, "content.publish") : review;
 }

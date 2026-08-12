@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 const errorMessages: Readonly<Record<string, string>> = {
   identity_unsupported: "身份映射失败，请重新登录。",
   identity_unverified: "身份供应商没有返回已验证身份。",
+  user_inactive: "账号已停用，不能建立高权限会话。",
   invalid_code: "请输入身份验证器显示的六位代码。",
   server_error: "二次认证暂时无法完成。",
   unavailable: "本环境尚未配置身份服务。",

@@ -15,7 +15,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-import { catalogEntities } from "@/modules/catalog/public";
+import { catalogEntities, sourceReferences } from "@/modules/catalog/public";
 import { users } from "@/modules/identity/public";
 
 export const articleState = pgEnum("article_state", [
@@ -156,6 +156,22 @@ export const reviewDecisionsTable = pgTable(
       "review_decisions_request_id_length",
       sql`char_length(${table.requestId}) between 1 and 128`,
     ),
+  ],
+);
+
+export const revisionSourceReferences = pgTable(
+  "revision_source_references",
+  {
+    revisionId: uuid("revision_id")
+      .notNull()
+      .references(() => contentRevisions.id, { onDelete: "cascade" }),
+    sourceReferenceId: uuid("source_reference_id")
+      .notNull()
+      .references(() => sourceReferences.id, { onDelete: "restrict" }),
+  },
+  (table) => [
+    primaryKey({ columns: [table.revisionId, table.sourceReferenceId] }),
+    index("revision_source_references_source_idx").on(table.sourceReferenceId),
   ],
 );
 

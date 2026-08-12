@@ -6,9 +6,11 @@ import type {
   IdentitySessionRecord,
   IdentitySessionStore,
 } from "../application/establish-session";
+import { IdentitySessionRejectedError } from "../application/establish-session";
 
 type IdentityRow = Readonly<{
   id: string;
+  status: "active" | "suspended" | "deleted";
   user_id: string;
 }>;
 
@@ -22,11 +24,12 @@ export class PostgresIdentitySessionStore implements IdentitySessionStore {
       const identityRows: IdentityRow[] = [];
       for (const identity of input.identities) {
         const rows = await transaction<IdentityRow[]>`
-          select id, user_id
-          from identities
-          where provider = ${identity.provider}
-            and provider_subject = ${identity.providerSubject}
-          for update
+          select identity.id, identity.user_id, app_user.status
+          from identities identity
+          join users app_user on app_user.id = identity.user_id
+          where identity.provider = ${identity.provider}
+            and identity.provider_subject = ${identity.providerSubject}
+          for update of identity, app_user
         `;
         identityRows.push(...rows);
       }
@@ -35,6 +38,9 @@ export class PostgresIdentitySessionStore implements IdentitySessionStore {
       );
       if (existingUserIds.size > 1) {
         throw new Error("external identities belong to different users");
+      }
+      if (identityRows.some(({ status }) => status !== "active")) {
+        throw new IdentitySessionRejectedError("user_inactive");
       }
 
       let userId = identityRows[0]?.user_id;
@@ -72,7 +78,7 @@ export class PostgresIdentitySessionStore implements IdentitySessionStore {
           set last_authenticated_at = excluded.last_authenticated_at,
               email_normalized = coalesce(excluded.email_normalized, identities.email_normalized),
               email_verified_at = coalesce(excluded.email_verified_at, identities.email_verified_at)
-          returning id, user_id
+          returning id, user_id, 'active'::user_status as status
         `;
         const row = rows[0];
         if (!row) throw new Error("external identity was not persisted");

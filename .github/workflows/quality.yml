@@ -31,6 +31,21 @@ jobs:
       DATABASE_MIGRATION_URL: postgresql://ci:ci@localhost:5432/ci
       DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
       LOG_LEVEL: error
+      RUN_POSTGRES_ADAPTER_TESTS: 1
+    services:
+      postgres:
+        image: postgres:18.1-alpine
+        env:
+          POSTGRES_DB: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_USER: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -45,6 +60,8 @@ jobs:
           cache: pnpm
       - name: Install locked dependencies
         run: pnpm install --frozen-lockfile
+      - name: Apply database migrations
+        run: pnpm db:migrate
       - name: Run complete quality gate
         run: pnpm quality
 

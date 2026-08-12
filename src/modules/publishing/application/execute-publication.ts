@@ -30,11 +30,20 @@ export type PublicationState = Readonly<{
 }>;
 
 export type PublicationCommit = Readonly<{
+  approval?: Readonly<{ reason: string; requestId: string }>;
   actorUserId: string;
   plan: PublicationPlan;
   reason: string;
   requestId: string;
   requested: RevisionDescriptor;
+}>;
+
+export type ApprovalPublicationCommand = Readonly<{
+  actorUserId: string;
+  principal: AuthorizationPrincipal;
+  reason: string;
+  requestId: string;
+  revisionId: string;
 }>;
 
 export interface PublicationStore {
@@ -114,6 +123,69 @@ export async function executePublication(
     requested: state.requested,
   });
   return { ok: true, plan: planned };
+}
+
+/** Approve a revision and publish it through one transactional store commit. */
+export async function executeApprovalPublication(
+  store: PublicationStore,
+  command: ApprovalPublicationCommand,
+): Promise<PublicationExecution> {
+  const reviewAuthorization = authorizePublication(
+    command.principal,
+    "review_and_publish",
+  );
+  if (!reviewAuthorization.allowed) {
+    return {
+      issues: [`authorization:${reviewAuthorization.reason}`],
+      ok: false,
+    };
+  }
+
+  const reason = command.reason.trim();
+  const requestId = command.requestId.trim();
+  const inputIssues = [
+    command.actorUserId.trim() ? null : "actor_required",
+    requestId ? null : "request_id_required",
+    reason ? null : "reason_required",
+  ].filter((issue): issue is string => issue !== null);
+  if (inputIssues.length > 0) return { issues: inputIssues, ok: false };
+
+  const state = await store.loadState(command.revisionId);
+  if (!state) return { issues: ["revision_not_found"], ok: false };
+  const snapshotIssues = validateSnapshot(state);
+  if (snapshotIssues) return { issues: snapshotIssues, ok: false };
+
+  const planned = planPublication({
+    approvedRevisionIds: new Set([state.requested.id]),
+    current: state.current,
+    requested: state.requested,
+  });
+  if ("issues" in planned) return { issues: planned.issues, ok: false };
+  if (planned.eventType !== "published") {
+    return { issues: ["operation_pointer_direction_mismatch"], ok: false };
+  }
+
+  await store.commit({
+    actorUserId: command.actorUserId,
+    approval: { reason, requestId: `${requestId}:review` },
+    plan: planned,
+    reason,
+    requestId: `${requestId}:publish`,
+    requested: state.requested,
+  });
+  return { ok: true, plan: planned };
+}
+
+function validateSnapshot(state: PublicationState): readonly string[] | null {
+  if (state.requestedSchemaVersion !== 1) {
+    return [
+      `snapshot:schema_version:unsupported_${state.requestedSchemaVersion}`,
+    ];
+  }
+  const snapshot = parsePublishedRevisionSnapshot(state.requestedSnapshot);
+  return snapshot.ok
+    ? null
+    : snapshot.issues.map(({ code, path }) => `snapshot:${path}:${code}`);
 }
 
 function operationEventType(

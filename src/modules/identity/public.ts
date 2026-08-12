@@ -16,6 +16,7 @@ export {
 } from "./application/session-token";
 export {
   establishIdentitySession,
+  IdentitySessionRejectedError,
   type EstablishedIdentitySession,
   type IdentitySessionRecord,
   type IdentitySessionStore,

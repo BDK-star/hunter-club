@@ -14,6 +14,13 @@ export type IdentitySessionRecord = Readonly<{
   userId: string;
 }>;
 
+export class IdentitySessionRejectedError extends Error {
+  constructor(public readonly reason: "user_inactive") {
+    super(reason);
+    this.name = "IdentitySessionRejectedError";
+  }
+}
+
 export interface IdentitySessionStore {
   establish(input: {
     identities: readonly VerifiedExternalIdentity[];

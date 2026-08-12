@@ -35,6 +35,8 @@ export {
 } from "./application/record-review";
 export {
   executePublication,
+  executeApprovalPublication,
+  type ApprovalPublicationCommand,
   type PublicationCommand,
   type PublicationCommit,
   type PublicationExecution,
@@ -51,6 +53,7 @@ export {
   publicationEvents,
   publicationEventType,
   reviewDecisionsTable,
+  revisionSourceReferences,
   reviewDecision,
   revisionTargetKind,
 } from "./infrastructure/schema";

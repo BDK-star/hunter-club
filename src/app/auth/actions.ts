@@ -13,6 +13,7 @@ import {
 } from "@/platform/auth/supabase-server";
 import { getServerEnvironment } from "@/platform/config/runtime";
 import { resolveRequestId } from "@/shared-kernel/http/request-id";
+import { resolveLocalReturnPath } from "@/shared-kernel/http/local-return-path";
 
 const emailSchema = z
   .email()
@@ -26,7 +27,7 @@ export async function requestEmailOtp(formData: FormData): Promise<void> {
   const parsed = emailSchema.safeParse(formData.get("email"));
   if (!parsed.success) redirect("/auth?error=invalid_email");
 
-  const nextPath = resolveSafeNextPath(formData.get("next"));
+  const nextPath = resolveLocalReturnPath(formData.get("next"));
   const environment = getServerEnvironment();
   const callback = new URL("/auth/callback", environment.appBaseUrl);
   callback.searchParams.set("next", nextPath);
@@ -51,7 +52,7 @@ export async function verifyEmailOtp(formData: FormData): Promise<void> {
 
   const email = emailSchema.safeParse(formData.get("email"));
   const token = otpSchema.safeParse(formData.get("token"));
-  const nextPath = resolveSafeNextPath(formData.get("next"));
+  const nextPath = resolveLocalReturnPath(formData.get("next"));
   if (!email.success || !token.success) {
     redirect(`/auth?error=invalid_otp&next=${encodeURIComponent(nextPath)}`);
   }
@@ -84,7 +85,10 @@ export async function signInWithGitHub(formData: FormData): Promise<void> {
 
   const environment = getServerEnvironment();
   const callback = new URL("/auth/callback", environment.appBaseUrl);
-  callback.searchParams.set("next", resolveSafeNextPath(formData.get("next")));
+  callback.searchParams.set(
+    "next",
+    resolveLocalReturnPath(formData.get("next")),
+  );
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "github",
@@ -103,12 +107,4 @@ export async function signOut(): Promise<void> {
   }
   await deleteInternalSessionCookie();
   redirect("/?auth=signed_out");
-}
-
-function resolveSafeNextPath(candidate: FormDataEntryValue | null): string {
-  return typeof candidate === "string" &&
-    candidate.startsWith("/") &&
-    !candidate.startsWith("//")
-    ? candidate
-    : "/saloon";
 }

@@ -3,10 +3,11 @@ import { NextResponse } from "next/server";
 import { completeSupabaseSignIn } from "@/platform/auth/complete-sign-in";
 import { createSupabaseServerClient } from "@/platform/auth/supabase-server";
 import { resolveRequestId } from "@/shared-kernel/http/request-id";
+import { resolveLocalReturnPath } from "@/shared-kernel/http/local-return-path";
 
 export async function GET(request: Request): Promise<NextResponse> {
   const requestUrl = new URL(request.url);
-  const nextPath = resolveSafeNextPath(requestUrl.searchParams.get("next"));
+  const nextPath = resolveLocalReturnPath(requestUrl.searchParams.get("next"));
   const code = requestUrl.searchParams.get("code");
   if (!code) return authFailure(requestUrl, nextPath, "missing_code");
 
@@ -28,13 +29,6 @@ export async function GET(request: Request): Promise<NextResponse> {
   } catch {
     return authFailure(requestUrl, nextPath, "server_error");
   }
-}
-
-function resolveSafeNextPath(candidate: string | null): string {
-  if (!candidate?.startsWith("/") || candidate.startsWith("//")) {
-    return "/saloon";
-  }
-  return candidate;
 }
 
 function authFailure(

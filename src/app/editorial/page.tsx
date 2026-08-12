@@ -1,10 +1,11 @@
+import { randomUUID } from "node:crypto";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getInternalSessionPrincipal } from "@/platform/auth/internal-session";
 import { loadRuntimeEditorialQueue } from "@/platform/publishing/runtime";
 
-import { approveRevision, publishRevision } from "./actions";
+import { approveAndPublishRevision } from "./actions";
 
 export const metadata: Metadata = {
   robots: { follow: false, index: false },
@@ -134,11 +135,16 @@ export default async function EditorialPage({
                   )}
                 </div>
                 <div className="editorial-actions">
-                  <form action={approveRevision}>
+                  <form action={approveAndPublishRevision}>
                     <input
                       name="revisionId"
                       type="hidden"
                       value={item.revisionId}
+                    />
+                    <input
+                      name="commandToken"
+                      type="hidden"
+                      value={randomUUID().replaceAll("-", "")}
                     />
                     <label>
                       审核理由
@@ -151,31 +157,7 @@ export default async function EditorialPage({
                       />
                     </label>
                     <button className="secondary-action" type="submit">
-                      批准修订
-                    </button>
-                  </form>
-                  <form action={publishRevision}>
-                    <input
-                      name="revisionId"
-                      type="hidden"
-                      value={item.revisionId}
-                    />
-                    <label>
-                      发布理由
-                      <textarea
-                        maxLength={1000}
-                        minLength={5}
-                        name="reason"
-                        required
-                        defaultValue="发布已批准的带来源资料"
-                      />
-                    </label>
-                    <button
-                      className="primary-action"
-                      disabled={item.latestReviewDecision !== "approved"}
-                      type="submit"
-                    >
-                      发布到资料库
+                      批准并发布到资料库
                     </button>
                   </form>
                 </div>

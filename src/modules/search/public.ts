@@ -3,6 +3,7 @@ export {
   searchDocumentKinds,
   validateSearchQuery,
   type SearchDocumentKind,
+  type PublishedSearchDocument,
   type SearchQuery,
   type SearchQueryIssue,
   type SearchResult,
@@ -20,6 +21,7 @@ export {
   createAnonymousSearchMetric,
   type AnonymousSearchMetric,
 } from "./application/query-metric";
+export { projectPublishedRevision } from "./application/published-revision-projection";
 export {
   searchCanonStatus,
   searchDocumentKind,

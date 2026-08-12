@@ -27,6 +27,7 @@
     "config:check": "tsx scripts/check-config.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
+    "search:rebuild": "tsx scripts/rebuild-search.ts",
     "quality": "pnpm config:check && pnpm format:check && pnpm lint && pnpm typecheck && pnpm architecture:check && pnpm experience:check && pnpm test && pnpm test:integration && pnpm build"
   },
   "dependencies": {

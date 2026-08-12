@@ -9,6 +9,13 @@ export {
   type RevisionDescriptor,
   type RevisionTargetKind,
 } from "./domain/publication";
+export {
+  parsePublishedRevisionSnapshot,
+  type ArticleRevisionSnapshotV1,
+  type CatalogRevisionSnapshotV1,
+  type PublishedRevisionSnapshot,
+  type RevisionSnapshotIssue,
+} from "./domain/revision-snapshot";
 export { authorizePublication } from "./application/authorize-publication";
 export {
   executePublication,

@@ -204,4 +204,48 @@ describe("publishing persistence", () => {
       `),
     ).rejects.toThrow();
   });
+
+  it("uses the request ID as a publication command idempotency key", async () => {
+    await client.exec(`
+      insert into publication_events (
+        target_kind,
+        target_id,
+        event_type,
+        to_revision_id,
+        actor_user_id,
+        request_id,
+        reason
+      ) values (
+        'article',
+        '${articleId}',
+        'published',
+        '${revisionId}',
+        '${editorId}',
+        'publish-idempotency-1',
+        '首次发布'
+      );
+    `);
+
+    await expect(
+      client.exec(`
+        insert into publication_events (
+          target_kind,
+          target_id,
+          event_type,
+          to_revision_id,
+          actor_user_id,
+          request_id,
+          reason
+        ) values (
+          'article',
+          '${articleId}',
+          'published',
+          '${revisionId}',
+          '${editorId}',
+          'publish-idempotency-1',
+          '重复请求'
+        );
+      `),
+    ).rejects.toThrow();
+  });
 });

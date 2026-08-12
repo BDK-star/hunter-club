@@ -11,6 +11,7 @@ const serverEnvironmentSchema = z
       .default("info"),
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(20).optional(),
     NEXT_PUBLIC_SUPABASE_URL: z.url({ protocol: /^https?$/ }).optional(),
+    SEARCH_METRIC_FINGERPRINT_KEY: z.string().min(32).optional(),
   })
   .superRefine((environment, context) => {
     const hasKey =
@@ -36,6 +37,7 @@ export type ServerEnvironment = Readonly<{
   databaseMigrationUrl: string;
   databaseUrl: string;
   logLevel: z.infer<typeof serverEnvironmentSchema>["LOG_LEVEL"];
+  searchMetricFingerprintKey: string | null;
   supabaseAuth: Readonly<{
     publishableKey: string;
     url: string;
@@ -67,6 +69,8 @@ export function parseServerEnvironment(
     databaseMigrationUrl: result.data.DATABASE_MIGRATION_URL,
     databaseUrl: result.data.DATABASE_URL,
     logLevel: result.data.LOG_LEVEL,
+    searchMetricFingerprintKey:
+      result.data.SEARCH_METRIC_FINGERPRINT_KEY ?? null,
     supabaseAuth:
       result.data.NEXT_PUBLIC_SUPABASE_URL &&
       result.data.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY

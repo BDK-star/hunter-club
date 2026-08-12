@@ -18,7 +18,7 @@ describe("database migrations", () => {
         "select count(*)::int as count from drizzle.__drizzle_migrations",
       );
 
-      expect(result.rows).toEqual([{ count: 5 }]);
+      expect(result.rows).toEqual([{ count: 7 }]);
     } finally {
       await client.close();
     }

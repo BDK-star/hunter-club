@@ -37,6 +37,7 @@ export default function LibraryPage() {
           <Link aria-current="page" href="/library">
             资料库
           </Link>
+          <Link href="/search">搜索</Link>
         </nav>
       </header>
 
@@ -78,6 +79,9 @@ export default function LibraryPage() {
           </Link>
           <Link className="text-link" href="/">
             回到门外
+          </Link>
+          <Link className="text-link" href="/search">
+            打开索引台
           </Link>
         </footer>
       </article>

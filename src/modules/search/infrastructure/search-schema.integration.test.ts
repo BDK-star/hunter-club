@@ -106,6 +106,61 @@ describe("search persistence", () => {
     expect(result.rows).toEqual([{ slug: "gon-freecss" }]);
   });
 
+  it("retains separate cumulative projections for each spoiler boundary", async () => {
+    await client.exec(`
+      insert into search_documents (
+        target_kind,
+        target_id,
+        revision_id,
+        kind,
+        locale,
+        slug,
+        title,
+        normalized_title,
+        normalized_aliases,
+        body,
+        search_text,
+        canon_status,
+        spoiler_level,
+        projection_version,
+        published_at
+      ) values (
+        'catalog_entity',
+        '${gonId}',
+        '${gonRevisionId}',
+        'character',
+        'zh-CN',
+        'gon-freecss',
+        '小杰·富力士',
+        '小杰·富力士',
+        array['ゴン', 'gon'],
+        '包含动画进度内的累积事实。',
+        '小杰·富力士 ゴン gon 包含动画进度内的累积事实。',
+        'canon',
+        'anime',
+        1,
+        now()
+      );
+    `);
+    const result = await client.query<{
+      spoiler_level: string;
+    }>(`
+      select spoiler_level
+      from search_documents
+      where target_id = '${gonId}'
+      order by case spoiler_level
+        when 'safe' then 0
+        when 'anime' then 1
+        when 'manga' then 2
+      end
+    `);
+
+    expect(result.rows).toEqual([
+      { spoiler_level: "safe" },
+      { spoiler_level: "anime" },
+    ]);
+  });
+
   it("rejects article and catalog projections with contradictory kinds", async () => {
     await expect(
       client.exec(`

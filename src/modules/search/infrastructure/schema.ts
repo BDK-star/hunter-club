@@ -65,10 +65,12 @@ export const searchDocuments = pgTable(
       table.targetKind,
       table.targetId,
       table.locale,
+      table.spoilerLevel,
     ),
     uniqueIndex("search_documents_slug_locale_unique").on(
       table.slug,
       table.locale,
+      table.spoilerLevel,
     ),
     index("search_documents_filters_idx").on(
       table.kind,

@@ -53,6 +53,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
           <Link href="/">门外</Link>
           <Link href="/saloon">大厅</Link>
           <Link href="/library">资料库</Link>
+          <Link href="/search">搜索</Link>
         </nav>
       </header>
 

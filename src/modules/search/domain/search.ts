@@ -34,7 +34,14 @@ export type SearchResult = Readonly<{
   title: string;
 }>;
 
+export type PublishedSearchDocument = SearchResult & Readonly<{ body: string }>;
+
 export interface SearchService {
+  findPublishedBySlug(input: {
+    locale: string;
+    maxSpoilerLevel: CatalogSpoilerLevel;
+    slug: string;
+  }): Promise<PublishedSearchDocument | null>;
   search(query: SearchQuery): Promise<readonly SearchResult[]>;
 }
 

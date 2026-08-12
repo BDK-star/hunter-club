@@ -49,4 +49,6 @@
 4. 执行`pnpm db:migrate`应用版本化迁移。
 5. 执行`pnpm dev`启动网站。
 
+内容发布或回滚后执行`pnpm search:rebuild`可从当前发布指针原子重建公开搜索投影；命令使用`DATABASE_MIGRATION_URL`，只能由受信任维护者或部署任务执行。
+
 可用的运行状态接口为`/health/live`和`/health/ready`。提交前执行`pnpm quality`；它会检查格式、Lint、严格类型、模块边界、测试、迁移和生产构建。

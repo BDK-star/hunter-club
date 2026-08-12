@@ -36,6 +36,20 @@
       "when": 1786520124296,
       "tag": "0004_phase_three_search_projection",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786524593964,
+      "tag": "0005_phase_three_publication_idempotency",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786525935097,
+      "tag": "0006_phase_three_spoiler_projections",
+      "breakpoints": true
     }
   ]
 }

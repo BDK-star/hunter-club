@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "publication_events_request_id_unique" ON "publication_events" USING btree ("request_id");

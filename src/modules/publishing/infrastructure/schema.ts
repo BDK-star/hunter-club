@@ -242,6 +242,7 @@ export const publicationEvents = pgTable(
       table.occurredAt,
     ),
     index("publication_events_actor_idx").on(table.actorUserId),
+    uniqueIndex("publication_events_request_id_unique").on(table.requestId),
     check(
       "publication_events_revision_shape",
       sql`(${table.eventType} = 'published' and ${table.toRevisionId} is not null) or (${table.eventType} = 'rolled_back' and ${table.fromRevisionId} is not null and ${table.toRevisionId} is not null and ${table.fromRevisionId} <> ${table.toRevisionId}) or (${table.eventType} = 'archived' and ${table.toRevisionId} is null)`,

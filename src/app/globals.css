@@ -171,6 +171,139 @@ summary {
   margin: 0.4rem 0 1rem;
 }
 
+.search-page {
+  min-height: 100svh;
+  background:
+    radial-gradient(
+      circle at 18% 12%,
+      rgb(44 119 115 / 15%),
+      transparent 28rem
+    ),
+    linear-gradient(145deg, #100b0b, #21130f 62%, #0d1515);
+}
+
+.search-workbench {
+  width: min(72rem, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: clamp(3rem, 8vw, 7rem) 0 6rem;
+}
+
+.search-workbench > header {
+  max-width: 54rem;
+}
+
+.search-workbench h1 {
+  font-size: clamp(2.8rem, 7vw, 5.8rem);
+}
+
+.search-form {
+  display: grid;
+  grid-template-columns:
+    minmax(12rem, 2fr) minmax(9rem, 1fr) minmax(9rem, 1fr)
+    auto;
+  align-items: end;
+  gap: 0.7rem;
+  margin-top: 2.5rem;
+  border: 1px solid rgb(216 166 78 / 28%);
+  padding: 1rem;
+  background: rgb(20 12 10 / 78%);
+}
+
+.search-form label {
+  align-self: end;
+  margin-bottom: 0.2rem;
+  color: var(--ink-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.search-form label:first-of-type {
+  grid-column: 1;
+}
+
+.search-form label:nth-of-type(2) {
+  grid-column: 2;
+}
+
+.search-form label:nth-of-type(3) {
+  grid-column: 3;
+}
+
+.search-form input,
+.search-form select {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+  padding: 0.8rem 0.9rem;
+  color: var(--ink);
+  background: #120d0c;
+}
+
+.search-form input {
+  grid-column: 1;
+}
+
+.search-results {
+  margin-top: 2rem;
+}
+
+.search-results ol {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.search-results li,
+.search-empty {
+  border-left: 3px solid var(--gold);
+  padding: 1.2rem 1.4rem;
+  background: rgb(23 14 12 / 78%);
+}
+
+.search-results h2 a {
+  color: var(--gold-bright);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.search-results li > p:not(.eyebrow),
+.search-results small,
+.published-body {
+  color: var(--ink-muted);
+  line-height: 1.75;
+}
+
+.published-entry {
+  max-width: 68rem;
+}
+
+.published-body {
+  margin-top: 2.5rem;
+  border-top: 1px solid rgb(216 166 78 / 22%);
+  padding-top: 1.5rem;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 54rem) {
+  .search-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .search-form label,
+  .search-form input,
+  .search-form select {
+    grid-column: auto !important;
+  }
+}
+
+@media (max-width: 38rem) {
+  .search-form {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 38rem) {
   .auth-field-row {
     grid-template-columns: 1fr;

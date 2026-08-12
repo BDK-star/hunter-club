@@ -20,8 +20,18 @@ describe("server environment", () => {
       databaseMigrationUrl: validEnvironment.DATABASE_MIGRATION_URL,
       databaseUrl: validEnvironment.DATABASE_URL,
       logLevel: "info",
+      searchMetricFingerprintKey: null,
       supabaseAuth: null,
     });
+  });
+
+  it("rejects a short search metric HMAC key", () => {
+    expect(() =>
+      parseServerEnvironment({
+        ...validEnvironment,
+        SEARCH_METRIC_FINGERPRINT_KEY: "short",
+      }),
+    ).toThrowError(/SEARCH_METRIC_FINGERPRINT_KEY/);
   });
 
   it("rejects a missing database connection without exposing other values", () => {

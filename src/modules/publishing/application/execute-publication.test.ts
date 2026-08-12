@@ -15,6 +15,16 @@ const approvedState: PublicationState = {
     targetId: "article-1",
     targetKind: "article",
   },
+  requestedSchemaVersion: 1,
+  requestedSnapshot: {
+    aliases: [],
+    body: "已核对正文",
+    canonStatus: "canon",
+    locale: "zh-CN",
+    spoilerLevel: "safe",
+    title: "测试文章",
+    type: "article",
+  },
 };
 
 function createStore(state: PublicationState | null): PublicationStore {
@@ -62,6 +72,19 @@ describe("execute publication", () => {
 
     await expect(executePublication(store, command())).resolves.toEqual({
       issues: ["revision_not_approved"],
+      ok: false,
+    });
+    expect(store.commit).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid public snapshot before moving a pointer", async () => {
+    const store = createStore({
+      ...approvedState,
+      requestedSnapshot: { title: "不完整快照" },
+    });
+
+    await expect(executePublication(store, command())).resolves.toEqual({
+      issues: ["snapshot:type:unknown_snapshot_type"],
       ok: false,
     });
     expect(store.commit).not.toHaveBeenCalled();

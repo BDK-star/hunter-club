@@ -139,6 +139,42 @@ describe("publishing persistence", () => {
     ).rejects.toThrow(/append-only/);
   });
 
+  it("uses the request ID as a review command idempotency key", async () => {
+    await client.exec(`
+      insert into review_decisions (
+        revision_id,
+        reviewer_user_id,
+        decision,
+        reason,
+        request_id
+      ) values (
+        '${revisionId}',
+        '${editorId}',
+        'approved',
+        '首次审核',
+        'review-idempotency-1'
+      );
+    `);
+
+    await expect(
+      client.exec(`
+        insert into review_decisions (
+          revision_id,
+          reviewer_user_id,
+          decision,
+          reason,
+          request_id
+        ) values (
+          '${revisionId}',
+          '${editorId}',
+          'approved',
+          '重复审核',
+          'review-idempotency-1'
+        );
+      `),
+    ).rejects.toThrow();
+  });
+
   it("prevents a publication pointer from crossing target boundaries", async () => {
     await expect(
       client.exec(`
@@ -247,5 +283,67 @@ describe("publishing persistence", () => {
         );
       `),
     ).rejects.toThrow();
+  });
+
+  it("can refresh the public projection inside the publication transaction", async () => {
+    await client.transaction(async (transaction) => {
+      await transaction.query(`
+        insert into article_publications (
+          article_id,
+          revision_id,
+          published_by_user_id
+        ) values (
+          '${articleId}',
+          '${revisionId}',
+          '${editorId}'
+        )
+      `);
+      await transaction.query(`
+        update articles
+        set state = 'published'
+        where id = '${articleId}'
+      `);
+      await transaction.query("delete from search_documents");
+      await transaction.query(`
+        insert into search_documents (
+          target_kind,
+          target_id,
+          revision_id,
+          kind,
+          locale,
+          slug,
+          title,
+          normalized_title,
+          normalized_aliases,
+          body,
+          search_text,
+          canon_status,
+          spoiler_level,
+          projection_version,
+          published_at
+        ) values (
+          'article',
+          '${articleId}',
+          '${revisionId}',
+          'article',
+          'zh-CN',
+          'hunter-exam-guide',
+          '猎人考试指南',
+          '猎人考试指南',
+          '{}',
+          '公开正文',
+          '猎人考试指南 公开正文',
+          'canon',
+          'safe',
+          1,
+          now()
+        )
+      `);
+    });
+
+    const result = await client.query<{ title: string }>(`
+      select title from search_documents where target_id = '${articleId}'
+    `);
+    expect(result.rows).toEqual([{ title: "猎人考试指南" }]);
   });
 });

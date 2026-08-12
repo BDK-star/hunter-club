@@ -80,6 +80,9 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
             <p className="auth-notice" role="status">
               登记有效。你可以继续进入大厅，或撤销当前设备的会话。
             </p>
+            <Link className="primary-action" href="/auth/mfa">
+              设置或验证二次认证
+            </Link>
             <form action={signOut}>
               <button className="secondary-action auth-github" type="submit">
                 注销当前设备

@@ -166,6 +166,24 @@ summary {
   color: var(--ink-muted);
 }
 
+.mfa-enrollment {
+  display: grid;
+  gap: 1rem;
+}
+
+.mfa-enrollment img {
+  width: min(13.75rem, 100%);
+  height: auto;
+  padding: 0.5rem;
+  background: #fff;
+}
+
+.mfa-enrollment code {
+  padding: 0.75rem;
+  border: 1px solid rgb(48 32 24 / 24%);
+  overflow-wrap: anywhere;
+}
+
 .entry-auth {
   display: inline-flex;
   margin: 0.4rem 0 1rem;
@@ -180,6 +198,103 @@ summary {
       transparent 28rem
     ),
     linear-gradient(145deg, #100b0b, #21130f 62%, #0d1515);
+}
+
+.editorial-page {
+  min-height: 100svh;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 28%) 1px, transparent 1px),
+    linear-gradient(180deg, #24130f, #100b0b 60%);
+  background-size:
+    4rem 100%,
+    100% 100%;
+}
+
+.editorial-workbench {
+  width: min(76rem, calc(100% - 2rem));
+  padding: clamp(3rem, 7vw, 6rem) 0;
+  margin: 0 auto;
+}
+
+.editorial-workbench > header {
+  display: grid;
+  max-width: 58rem;
+  gap: 1rem;
+}
+
+.editorial-workbench h1 {
+  max-width: 58rem;
+}
+
+.editorial-queue {
+  display: grid;
+  gap: 2rem;
+  padding: 0;
+  margin: 3rem 0 0;
+  list-style: none;
+}
+
+.editorial-queue > li {
+  display: grid;
+  gap: 1.5rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  background: rgb(18 10 9 / 80%);
+}
+
+.editorial-queue h2 {
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+}
+
+.revision-diff {
+  overflow-x: auto;
+}
+
+.revision-diff table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.revision-diff th,
+.revision-diff td {
+  padding: 0.8rem;
+  border: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  text-align: left;
+  vertical-align: top;
+}
+
+.revision-diff thead th {
+  color: var(--gold-bright);
+}
+
+.editorial-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.editorial-actions form,
+.editorial-actions label {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.editorial-actions textarea {
+  min-height: 6rem;
+  padding: 0.7rem;
+  border: 1px solid var(--line);
+  color: var(--paper-ink);
+  background: var(--paper);
+  font: inherit;
+  resize: vertical;
+}
+
+.editorial-actions button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.55;
 }
 
 .search-workbench {
@@ -1218,6 +1333,10 @@ h2 {
 }
 
 @media (max-width: 56rem) {
+  .editorial-actions {
+    grid-template-columns: 1fr;
+  }
+
   .exterior-scene {
     grid-template-columns: 1fr;
     min-height: auto;

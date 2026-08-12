@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { Sql } from "postgres";
+import type { Sql, TransactionSql } from "postgres";
 
 import { parsePublishedRevisionSnapshot } from "@/modules/publishing/public";
 
@@ -23,6 +23,14 @@ export type ProjectionRebuildResult = Readonly<{
 
 export async function rebuildPostgresSearchProjection(
   sql: Sql,
+): Promise<ProjectionRebuildResult> {
+  return sql.begin((transaction) =>
+    rebuildPostgresSearchProjectionInTransaction(transaction),
+  );
+}
+
+export async function rebuildPostgresSearchProjectionInTransaction(
+  sql: TransactionSql,
 ): Promise<ProjectionRebuildResult> {
   const rows = await sql<PublishedRevisionRow[]>`
     select
@@ -77,10 +85,9 @@ export async function rebuildPostgresSearchProjection(
     );
   }
 
-  await sql.begin(async (transaction) => {
-    await transaction`delete from search_documents`;
-    for (const document of documents) {
-      await transaction`
+  await sql`delete from search_documents`;
+  for (const document of documents) {
+    await sql`
         insert into search_documents (
           target_kind,
           target_id,
@@ -107,7 +114,7 @@ export async function rebuildPostgresSearchProjection(
           ${document.slug},
           ${document.title},
           ${document.normalizedTitle},
-          ${transaction.array([...document.normalizedAliases])},
+          ${sql.array([...document.normalizedAliases])},
           ${document.body},
           ${document.searchText},
           ${document.canonStatus},
@@ -117,8 +124,7 @@ export async function rebuildPostgresSearchProjection(
           now()
         )
       `;
-    }
-  });
+  }
 
   return { documentCount: documents.length, revisionCount: rows.length };
 }

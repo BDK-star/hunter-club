@@ -1,6 +1,7 @@
 import type { AuthorizationPrincipal } from "@/modules/identity/public";
 
 import { authorizePublication } from "./authorize-publication";
+import { parsePublishedRevisionSnapshot } from "../domain/revision-snapshot";
 import {
   planPublication,
   type PublicationPlan,
@@ -24,6 +25,8 @@ export type PublicationState = Readonly<{
   current: PublicationPointer | null;
   latestReviewDecision: ReviewDecision | null;
   requested: RevisionDescriptor;
+  requestedSchemaVersion: number;
+  requestedSnapshot: unknown;
 }>;
 
 export type PublicationCommit = Readonly<{
@@ -70,6 +73,24 @@ export async function executePublication(
 
   const state = await store.loadState(command.revisionId);
   if (!state) return { issues: ["revision_not_found"], ok: false };
+
+  if (state.requestedSchemaVersion !== 1) {
+    return {
+      issues: [
+        `snapshot:schema_version:unsupported_${state.requestedSchemaVersion}`,
+      ],
+      ok: false,
+    };
+  }
+  const snapshot = parsePublishedRevisionSnapshot(state.requestedSnapshot);
+  if (!snapshot.ok) {
+    return {
+      issues: snapshot.issues.map(
+        ({ code, path }) => `snapshot:${path}:${code}`,
+      ),
+      ok: false,
+    };
+  }
 
   const planned = planPublication({
     approvedRevisionIds:

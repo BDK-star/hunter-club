@@ -16,7 +16,23 @@ export {
   type PublishedRevisionSnapshot,
   type RevisionSnapshotIssue,
 } from "./domain/revision-snapshot";
+export {
+  compareRevisionSnapshots,
+  type RevisionDifference,
+} from "./domain/revision-diff";
 export { authorizePublication } from "./application/authorize-publication";
+export {
+  loadEditorialQueue,
+  type EditorialCandidate,
+  type EditorialQueueItem,
+  type EditorialQueueResult,
+  type EditorialQueueStore,
+} from "./application/load-editorial-queue";
+export {
+  recordReview,
+  type ReviewCommand,
+  type ReviewStore,
+} from "./application/record-review";
 export {
   executePublication,
   type PublicationCommand,

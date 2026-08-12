@@ -45,11 +45,25 @@
 - `hc_session`只保存256位随机令牌，使用`HttpOnly`、`SameSite=Lax`、生产`Secure`和明确到期时间；数据库只保存SHA-256摘要。
 - 注销同时撤销数据库会话、删除内部Cookie并注销本地Supabase会话。
 - 编辑、版主、管理员操作必须从内部会话重新读取角色、账号状态和AAL，并要求`aal2`。
+- 普通登录后访问`/auth/mfa`设置TOTP；扫描二维码并验证六位代码后，应用撤销旧内部会话，再从Supabase的`aal2`声明签发新会话。TOTP密钥和验证码不得写入应用数据库或日志。
+- 至少保留两个可恢复的管理员身份；遗失验证器时由Supabase Dashboard的用户MFA管理流程人工解除因子，再要求用户重新注册。当前不自行生成伪恢复码。
 - 日志和错误页不得输出邮箱、验证码、Cookie、访问令牌或身份供应商响应正文。
 
-## 5. 当前限制
+## 5. 编辑账号开通
 
-- TOTP注册、挑战、恢复码和高权限账号恢复界面尚未完成；因此不得在试运行中手工授予`editor`、`moderator`或`admin`。
+新用户首次登录固定只有`member`，不能从浏览器自行提权。维护者在确认账号与TOTP已经绑定后，使用数据库管理连接执行：
+
+```sql
+insert into user_roles (user_id, role_key, granted_by_user_id)
+values ('<内部 users.id>', 'editor', '<现有管理员 users.id>')
+on conflict (user_id, role_key) do nothing;
+```
+
+首位管理员的引导属于部署所有者操作：先在Supabase完成登录与TOTP绑定，再通过Supabase SQL Editor仅授予已核对的内部`users.id`。不得根据邮箱模糊匹配，不得把提权SQL做成公开端点。完成后访问`/editorial`，确认`aal1`被拒绝、`aal2`可见差异和操作按钮。
+
+## 6. 当前限制
+
+- TOTP注册、挑战和会话升级已实现；恢复码不由应用伪造，高权限账号恢复仍依赖Supabase控制台和双管理员运维流程。
 - 登录和验证码的分布式限流尚未接入；公开开放注册前必须补齐。
 - Supabase故障时只关闭登录和写入，不得把酒吧门变成公开内容的强制登录墙。
 

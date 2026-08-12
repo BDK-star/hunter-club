@@ -21,6 +21,8 @@ type PublicationStateRow = Readonly<{
   latest_review_decision: ReviewDecision | null;
   revision_id: string;
   sequence: number;
+  schema_version: number;
+  snapshot: unknown;
   target_id: string;
   target_kind: "article" | "catalog_entity";
 }>;
@@ -33,7 +35,12 @@ export class PublicationConflictError extends Error {
 }
 
 export class PostgresPublicationStore implements PublicationStore {
-  constructor(private readonly sql: Sql) {}
+  constructor(
+    private readonly sql: Sql,
+    private readonly afterPublication?: (
+      transaction: TransactionSql,
+    ) => Promise<void>,
+  ) {}
 
   async loadState(revisionId: string): Promise<PublicationState | null> {
     return loadPublicationState(this.sql, revisionId);
@@ -121,6 +128,7 @@ export class PostgresPublicationStore implements PublicationStore {
           ${command.requestId}, ${command.reason}
         )
       `;
+      await this.afterPublication?.(transaction);
     });
   }
 }
@@ -135,6 +143,8 @@ async function loadPublicationState(
       requested.target_kind,
       coalesce(requested.article_id, requested.catalog_entity_id) as target_id,
       requested.sequence,
+      requested.schema_version,
+      requested.snapshot,
       latest_review.decision as latest_review_decision,
       current_revision.id as current_revision_id,
       current_revision.sequence as current_sequence
@@ -182,6 +192,8 @@ async function loadPublicationState(
     current,
     latestReviewDecision: row.latest_review_decision,
     requested,
+    requestedSchemaVersion: row.schema_version,
+    requestedSnapshot: row.snapshot,
   };
 }
 

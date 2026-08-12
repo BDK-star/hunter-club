@@ -147,6 +147,7 @@ export const reviewDecisionsTable = pgTable(
       table.decidedAt,
     ),
     index("review_decisions_reviewer_idx").on(table.reviewerUserId),
+    uniqueIndex("review_decisions_request_id_unique").on(table.requestId),
     check(
       "review_decisions_reason_length",
       sql`char_length(${table.reason}) between 1 and 1000`,

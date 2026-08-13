@@ -64,3 +64,4 @@
 - 登录回跳统一经过同源本地路径Module，拒绝协议相对路径、反斜杠、编码分隔符与控制字符；停用或删除用户在Identity事务内不能签发新会话。
 - 2026-08-12阶段3第三批全仓质量门通过：格式、Lint、严格类型、114个模块/160条依赖、体验合同、24个单元测试文件共55项、5个隔离数据库测试文件共25项，以及包含`/auth/mfa`和`/editorial`的Next.js生产构建均成功。
 - 架构复审后新增第9项迁移`revision_source_references`，把来源从快照字符串提升为受外键约束的修订关联。CI Core Quality现在启动PostgreSQL 18.1、先执行真实迁移，再通过`PostgresPublicationStore` Interface验证来源关联、整笔回滚和精确重放；PGlite继续覆盖可移植的迁移与数据库约束。本地完整门禁通过25个单元测试文件共65项、6个PGlite集成测试文件共26项；3个要求真实PostgreSQL的Store用例因本机Docker引擎未启动而明确跳过，必须以Pull Request的Core Quality结果为准。
+- 2026-08-13开发Supabase的Transaction Pooler与Session Pooler均通过只读认证；`pnpm db:migrate`成功应用全部9项迁移，远端`drizzle.__drizzle_migrations`计数为9，`revision_source_references`表存在。远端内部用户仍为0，因此登录、TOTP、编辑角色、真实种子和公开读取冒烟尚未完成。

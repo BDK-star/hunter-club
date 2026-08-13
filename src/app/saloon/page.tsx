@@ -45,6 +45,7 @@ export default async function SaloonPage({ searchParams }: SaloonPageProps) {
             大厅
           </Link>
           <Link href="/library">资料库</Link>
+          <Link href="/search">搜索</Link>
         </nav>
         <details className="spoiler-control">
           <summary>剧透：{spoilerLabels[spoilerLevel]}</summary>

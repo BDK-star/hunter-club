@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "review_decisions_request_id_unique" ON "review_decisions" USING btree ("request_id");

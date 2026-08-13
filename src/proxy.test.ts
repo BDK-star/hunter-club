@@ -4,8 +4,8 @@ import { describe, expect, it } from "vitest";
 import { proxy } from "./proxy";
 
 describe("request proxy", () => {
-  it("returns the correlation ID to the caller", () => {
-    const response = proxy(
+  it("returns the correlation ID to the caller", async () => {
+    const response = await proxy(
       new NextRequest("http://localhost/catalog", {
         headers: { "x-request-id": "request-proxy-123" },
       }),

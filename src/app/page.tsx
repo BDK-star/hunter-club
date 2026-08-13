@@ -25,6 +25,7 @@ export default function HomePage() {
           </Link>
           <Link href="/saloon">大厅</Link>
           <Link href="/library">资料库</Link>
+          <Link href="/search">搜索</Link>
         </nav>
       </header>
 
@@ -60,7 +61,10 @@ export default function HomePage() {
             <div className="entry-panel">
               <p className="eyebrow">VISITOR LEDGER</p>
               <h2>先约定剧透边界</h2>
-              <p>阶段2允许旅客直接进入。账号登记会在身份系统完成后开放。</p>
+              <p>旅客可以直接进入；登录只为贡献内容和保存个人状态。</p>
+              <Link className="secondary-action entry-auth" href="/auth">
+                在旅客登记册登录
+              </Link>
               <form action="/saloon" method="get">
                 <fieldset>
                   <legend>本次浏览显示到哪里？</legend>

@@ -2,7 +2,7 @@
 
 面向全球中文《HUNTER×HUNTER》爱好者的非官方内容与交流网站。项目以一座美式西部酒吧作为叙事化门户：用户从酒吧门进入，在2.5D场景中与NPC对话，并由NPC进入资料库、念能力测试、投稿、讨论等标准功能页面。
 
-> 当前状态：阶段2酒吧入口纵向切片已完成并部署。依赖安全技术债、门外、大厅、NPC对话、资料库导览及浏览器体验门禁均已交付。
+> 当前状态：阶段2已完成并部署；阶段3正在完成生产验收。已落地版本化数据模型、Supabase邮箱/GitHub登录与TOTP二次认证、安全内部会话、带来源资料、不可变修订、事务发布、编辑差异视图和可重建PostgreSQL公开搜索；供应商控制台验收、真实种子出版和生产冒烟仍待执行。
 
 ## 已确认的产品方向
 
@@ -33,7 +33,9 @@
 - [MVP交付路线](docs/roadmap/mvp-delivery-plan.md)
 - [阶段1完成清单](docs/governance/phase-1-checklist.md)
 - [阶段2完成清单](docs/governance/phase-2-checklist.md)
+- [阶段3完成清单](docs/governance/phase-3-checklist.md)
 - [阶段1环境接入手册](docs/runbooks/phase-1-environments.md)
+- [阶段3认证配置与验收](docs/runbooks/phase-3-auth.md)
 
 关键架构选择记录在 [`docs/adr`](docs/adr/) 下。实现阶段的Pull Request必须遵守这些边界；若要改变已接受决策，应先新增或替代ADR。
 
@@ -46,5 +48,7 @@
 3. 执行`pnpm install --frozen-lockfile`安装锁定依赖。
 4. 执行`pnpm db:migrate`应用版本化迁移。
 5. 执行`pnpm dev`启动网站。
+
+内容发布或回滚后执行`pnpm search:rebuild`可从当前发布指针原子重建公开搜索投影；命令使用`DATABASE_MIGRATION_URL`，只能由受信任维护者或部署任务执行。
 
 可用的运行状态接口为`/health/live`和`/health/ready`。提交前执行`pnpm quality`；它会检查格式、Lint、严格类型、模块边界、测试、迁移和生产构建。

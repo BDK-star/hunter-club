@@ -113,6 +113,35 @@ test("standard URLs remain usable when JavaScript is disabled", async ({
   await context.close();
 });
 
+test("privileged pages fail closed without blocking public reading", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop");
+
+  await page.goto("/editorial");
+  await expect(
+    page.getByRole("heading", { name: "编辑台暂未开锁。" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "前往旅客登记册" }),
+  ).toHaveAttribute("href", "/auth?next=/editorial");
+  await expectNoAutomatedA11yViolations(page);
+
+  await page.goto("/auth/mfa");
+  await expect(
+    page.getByRole("heading", { name: "高权限操作，需要第二枚印章。" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("需要先完成普通登录。", { exact: false }),
+  ).toBeVisible();
+  await expectNoAutomatedA11yViolations(page);
+
+  await page.goto("/library");
+  await expect(
+    page.getByRole("heading", { name: "资料库不是百科抄写间。" }),
+  ).toBeVisible();
+});
+
 test("reduced motion removes scene transitions", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "reduced-motion");
   await page.emulateMedia({ reducedMotion: "reduce" });

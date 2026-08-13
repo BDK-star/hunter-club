@@ -1,3 +1,4 @@
-// Domain tables are introduced by their owning modules in later phases.
-// Keeping this entry point allows versioned migrations without inventing data.
-export {};
+export * from "@/modules/catalog/public";
+export * from "@/modules/identity/public";
+export * from "@/modules/publishing/public";
+export * from "@/modules/search/public";
